@@ -14,6 +14,27 @@
 #Zidentyfikuj luki w numeracji.
 #Zmień nazwy plików, aby zamknąć luki.
 
+
+#Wytłumaczenie kodu:
+#Program 1:
+
+#Używa wyrażeń regularnych do znajdowania plików z danym prefiksem.
+#Tworzy słownik z numerami plików jako kluczami.
+#Sortuje numery plików i sprawdza, czy są luki.
+#Zmienia nazwy plików, aby zamknąć luki.
+#Program 2:
+
+#Podobnie jak Program 1, używa wyrażeń regularnych do znajdowania plików z danym prefiksem.
+#Tworzy słownik z numerami plików jako kluczami.
+#Sortuje numery plików w odwrotnej kolejności.
+#Zmienia nazwy plików, aby wprowadzić lukę na określonej pozycji.
+#Jak uruchomić:
+#Skopiuj powyższe kody do plików .py, np. fill_gaps.py i insert_gap.py.
+#Upewnij się, że masz zainstalowany Python na swoim komputerze.
+#Otwórz terminal (cmd) i przejdź do katalogu, w którym zapisałeś skrypty.
+#Uruchom skrypt za pomocą komendy python fill_gaps.py lub python insert_gap.py.
+#Skrypty przejdą przez wszystkie pliki w katalogu CV_priv na twoim pulpicie i zamkną luki w numeracji plików lub wprowadzą lukę w numeracji, aby można było dodać nowy plik.
+
 import os
 import re
 
@@ -50,3 +71,40 @@ folder_to_search = "C:\\Users\\mantonik.AD\\Desktop\\pomoce"  # Podaj ścieżkę
 prefix = "spam"  # Podaj prefiks plików do przeszukiwania
 
 fill_gaps(folder_to_search, prefix)
+
+
+import os
+import re
+
+def insert_gap(folder, prefix, gap_position):
+    # Pobierz listę plików w folderze
+    files = os.listdir(folder)
+    # Użyj wyrażenia regularnego do znajdowania plików z danym prefiksem i numerem
+    pattern = re.compile(rf'^{prefix}(\d+)\.txt$')
+
+    # Przechowuj znalezione pliki w słowniku z ich numerami
+    file_dict = {}
+    for filename in files:
+        match = pattern.match(filename)
+        if match:
+            number = int(match.group(1))
+            file_dict[number] = filename
+
+    # Posortuj numery plików w odwrotnej kolejności
+    sorted_numbers = sorted(file_dict.keys(), reverse=True)
+
+    # Zmień nazwy plików, aby wprowadzić lukę
+    for number in sorted_numbers:
+        if number >= gap_position:
+            old_name = os.path.join(folder, file_dict[number])
+            new_name = os.path.join(folder, f'{prefix}{number+1:03}.txt')
+            os.rename(old_name, new_name)
+            print(f'Renamed {old_name} to {new_name}')
+
+# Użycie funkcji
+folder_to_search = "C:\\Users\\mantonik.AD\\Desktop\\CV_priv"  # Podaj ścieżkę do swojego katalogu
+prefix = "spam"  # Podaj prefiks plików do przeszukiwania
+gap_position = 2  # Podaj pozycję, w której chcesz wprowadzić lukę
+
+insert_gap(folder_to_search, prefix, gap_position)
+
