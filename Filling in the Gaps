@@ -1,0 +1,52 @@
+#Projekt w Pythonie: Wypełnianie Luk w Numeracji Plików
+#Opis projektu:
+#Napisz program, który znajduje wszystkie pliki z danym prefiksem, takie jak spam001.txt, spam002.txt itd., w jednym folderze i lokalizuje luki w numeracji (np. jeśli jest spam001.txt i spam003.txt, ale brakuje spam002.txt). Program powinien zmienić nazwę wszystkich późniejszych plików, aby zamknąć tę lukę. Dodatkowo napisz program, który może wprowadzać luki do numerowanych plików, aby można było dodać nowy plik.
+
+#Instrukcje:
+#Program powinien wyszukać pliki z określonym prefiksem w danym folderze.
+#Powinien zidentyfikować luki w numeracji plików.
+#Powinien zmienić nazwy plików, aby zamknąć luki w numeracji.
+#Drugi program powinien wprowadzić lukę w numeracji, aby można było dodać nowy plik.
+#Program 1: Znajdowanie Luk i Ich Usuwanie
+#Kroki:
+#Użyj modułu os do nawigacji po systemie plików.
+#Użyj wyrażeń regularnych z modułu re do znajdowania plików z określonym prefiksem.
+#Zidentyfikuj luki w numeracji.
+#Zmień nazwy plików, aby zamknąć luki.
+
+import os
+import re
+
+def fill_gaps(folder, prefix):
+    # Pobierz listę plików w folderze
+    files = os.listdir(folder)
+    # Użyj wyrażenia regularnego do znajdowania plików z danym prefiksem i numerem
+    pattern = re.compile(rf'^{prefix}(\d+)\.txt$')
+    
+    # Przechowuj znalezione pliki w słowniku z ich numerami
+    file_dict = {}
+    for filename in files:
+        match = pattern.match(filename)
+        if match:
+            number = int(match.group(1))
+            file_dict[number] = filename
+
+    # Posortuj numery plików
+    sorted_numbers = sorted(file_dict.keys())
+
+    # Znajdź i wypełnij luki
+    next_number = 1
+    for number in sorted_numbers:
+        if number != next_number:
+            # Zmień nazwę pliku, aby wypełnić lukę
+            old_name = os.path.join(folder, file_dict[number])
+            new_name = os.path.join(folder, f'{prefix}{next_number:03}.txt')
+            os.rename(old_name, new_name)
+            print(f'Renamed {old_name} to {new_name}')
+        next_number += 1
+
+# Użycie funkcji
+folder_to_search = "C:\\Users\\mantonik.AD\\Desktop\\pomoce"  # Podaj ścieżkę do swojego katalogu
+prefix = "spam"  # Podaj prefiks plików do przeszukiwania
+
+fill_gaps(folder_to_search, prefix)
