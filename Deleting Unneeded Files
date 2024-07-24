@@ -1,0 +1,38 @@
+#Projekt w Pythonie: Usuwanie Niepotrzebnych Plików
+#Opis projektu:
+#Napisz program, który przechodzi przez drzewo folderów i wyszukuje wyjątkowo duże pliki lub foldery, na przykład te, które mają rozmiar większy niż 100 MB. Program powinien wyświetlać na ekranie te pliki z ich pełną ścieżką.
+
+#Instrukcje:
+#Program powinien przejść przez wszystkie katalogi i podkatalogi, zaczynając od określonego katalogu głównego.
+#Powinien wyszukiwać pliki, których rozmiar jest większy niż 100 MB.
+#Znalezione pliki powinny być wyświetlane na ekranie z ich pełną ścieżką.
+#Kroki do wykonania:
+#Użyj modułu os do nawigacji po drzewie katalogów i uzyskiwania rozmiarów plików.
+#Użyj funkcji os.path.getsize() do uzyskania rozmiaru pliku.
+#Przechodź przez drzewo katalogów za pomocą os.walk().
+
+
+import os
+
+def find_large_files(folder, size_limit):
+    # Przechodź przez drzewo folderów
+    for foldername, subfolders, filenames in os.walk(folder):
+        for filename in filenames:
+            # Pełna ścieżka do pliku
+            file_path = os.path.join(foldername, filename)
+            try:
+                # Pobierz rozmiar pliku
+                file_size = os.path.getsize(file_path)
+                # Sprawdź, czy plik jest większy niż size_limit
+                if file_size > size_limit:
+                    # Wyświetl pełną ścieżkę do pliku i jego rozmiar
+                    print(f'{file_path} - {file_size / (1024 * 1024):.2f} MB')
+            except FileNotFoundError:
+                # Jeśli plik został usunięty lub jest niedostępny
+                print(f'Plik nie znaleziony: {file_path}')
+
+# Użycie funkcji
+folder_to_search = '/ścieżka/do/katalogu'  # Podaj ścieżkę do katalogu głównego
+size_limit = 100 * 1024 * 1024  # Ustaw limit rozmiaru pliku na 100 MB (w bajtach)
+
+find_large_files(folder_to_search, size_limit)
