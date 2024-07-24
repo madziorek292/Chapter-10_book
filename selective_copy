@@ -1,0 +1,40 @@
+#Opis projektu:
+#Napisz program, który przechodzi przez drzewo folderów i wyszukuje pliki z określonym rozszerzeniem (takie jak .pdf lub .jpg). Skopiuj te pliki z dowolnej lokalizacji, w której się znajdują, do nowego folderu.
+
+#Instrukcje:
+#Program powinien przejść przez wszystkie katalogi i podkatalogi, zaczynając od określonego katalogu głównego.
+#Powinien wyszukiwać pliki z określonym rozszerzeniem (np. .pdf, .jpg).
+#Znalezione pliki powinny być skopiowane do nowego folderu docelowego.
+#Jeśli folder docelowy nie istnieje, program powinien go utworzyć.
+#Kroki do wykonania:
+#Użyj modułu os do nawigacji po drzewie katalogów.
+#Użyj modułu shutil do kopiowania plików.
+#Użyj funkcji os.path do zarządzania ścieżkami plików.
+
+import os
+import shutil
+
+def selective_copy(src_folder, dest_folder, file_extensions):
+    # Upewnij się, że folder docelowy istnieje
+    if not os.path.exists(dest_folder):
+        os.makedirs(dest_folder)
+
+    # Przechodź przez drzewo folderów
+    for foldername, subfolders, filenames in os.walk(src_folder):
+        for filename in filenames:
+            # Sprawdź, czy plik ma określone rozszerzenie
+            if filename.lower().endswith(file_extensions):
+                # Pełna ścieżka do pliku źródłowego
+                file_path = os.path.join(foldername, filename)
+                # Pełna ścieżka do pliku w folderze docelowym
+                dest_path = os.path.join(dest_folder, filename)
+                # Skopiuj plik do folderu docelowego
+                shutil.copy(file_path, dest_path)
+                print(f'Skopiowano {file_path} do {dest_path}')
+
+# Użycie funkcji
+src_folder = '/ścieżka/do/katalogu/źródłowego'  # Podaj ścieżkę do katalogu źródłowego
+dest_folder = '/ścieżka/do/katalogu/docelowego'  # Podaj ścieżkę do katalogu docelowego
+file_extensions = ('.pdf', '.jpg')  # Podaj rozszerzenia plików, które chcesz kopiować
+
+selective_copy(src_folder, dest_folder, file_extensions)
